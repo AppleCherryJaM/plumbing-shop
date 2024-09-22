@@ -1,0 +1,7 @@
+back/node_modules
+back/views
+back/public
+back/.env
+back/static
+front/node_modules
+
