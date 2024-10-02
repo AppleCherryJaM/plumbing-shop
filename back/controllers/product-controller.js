@@ -3,14 +3,14 @@ const path = require("path");
 const { Op } = require("sequelize");
 
 const ApiError = require("../exceptions/api-error");
-const { Product, Category, ProductInfo, Brand, CategoryBrand, Exchange, CategoryProduct } = require('../models/db-models');
+const { Product, Category, ProductInfo, CategoryBrand, Exchange, CategoryProduct } = require('../models/db-models');
 const getDay = require("../util/day-formula");
 const priceFormula = require("../util/priceFormula");
 
 class ProductController {
 
 	async createProduct(req, res, next) {
-		const { name, categories, price, optPrice, brandId, info } = req.body; // !!!categories should be list of categoryId
+		const { name, categories, price, optPrice, brandId, info, totalQuantity } = req.body;
 		let result; 
 
 		const images = req.files.images;
@@ -26,7 +26,6 @@ class ProductController {
 		}
 		try {
 			const candidate = await Product.findOne({ where: { name } });
-			console.log("Candidate: ", candidate );
 			if (candidate) return next(ApiError.BadAPIRequest('Current product exists'));
 			const candidateCategories = await Category.findAll({
 				where: {
@@ -48,7 +47,8 @@ class ProductController {
 				name, price, 
 				optPrice: opt, 
 				images: files,
-				brandId: brandId
+				brandId: brandId,
+				totalQuantity: totalQuantity || 0
 			});
 			await newObj.addCategory(candidateCategories);
 
@@ -90,7 +90,6 @@ class ProductController {
 					}
 				}
 			});
-			console.log("Course: ", exchangeCourse);
 
 			const exchangeAdapter = {
 				USD: (price) => price * exchangeCourse.USD,
@@ -113,10 +112,7 @@ class ProductController {
 				});
 			} else if (!brandId && categoryIds && categoryIds.length > 0) {
 				let productIds = [];
-				console.log("Categories: ", categoryIds);
 				categoryProducts = await CategoryProduct.findAll({ where: { categoryId: categoryIds } });
-
-				console.log("CP: ", categoryProducts);
 
 				categoryProducts.forEach(item => {
 					if (!productIds.includes(item.productId)) {
