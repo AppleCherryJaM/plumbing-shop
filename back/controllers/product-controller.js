@@ -154,7 +154,6 @@ class ProductController {
 					}
 				});
 			}
-			console.log('Products: ', products);
 			products.forEach(product => {
 				product.price = exchangeAdapter[product.priceCurrency];
 
