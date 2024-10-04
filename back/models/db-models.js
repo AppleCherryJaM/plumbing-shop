@@ -66,10 +66,6 @@ const Category = sequelize.define('category', {
 	parentCategoryId: {
 		type: DataTypes.INTEGER,
 		allowNull: true
-	},
-	currencyExchange: {
-		type: DataTypes.JSON,
-		allowNull: false
 	}
 });
 
