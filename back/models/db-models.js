@@ -63,16 +63,13 @@ const Category = sequelize.define('category', {
 		allowNull: false,
 		unique: true
 	},
-	discountPercent: {
-		type: DataTypes.INTEGER,
-		defaultValue: 0
-	},
 	parentCategoryId: {
 		type: DataTypes.INTEGER,
 		allowNull: true
 	},
 	currencyExchange: {
-		type: DataTypes.JSON
+		type: DataTypes.JSON,
+		allowNull: false
 	}
 });
 
@@ -324,11 +321,6 @@ User.hasMany(Order, {
 	foreignKey: 'user_id'
 });
 Order.belongsTo(User);
-
-// User.hasMany(Card, {
-// 	foreignKey: 'user_id'
-// });
-// Card.belongsTo(User);
 
 Category.hasMany(Product, {
 	foreignKey: "categoryId"

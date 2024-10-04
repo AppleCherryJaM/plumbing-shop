@@ -6,9 +6,14 @@ const ApiError = require("../exceptions/api-error");
 class CategoryController{
 
 	async createCategory(req, res, next) {
-		const { name } = req.body;
+		const { name, parent, currencyCourse } = req.body;
 		try {
-			const category = await Category.create({ name });
+			let category;
+			if (!parent) {
+				category = await Category.create({ name, currencyExchange: JSON.stringify(currencyCourse) });
+			} else {
+				category = await Category.create({ name, parentId: parent, currencyExchange: JSON.stringify(currencyCourse) });
+			}
 			return res.status(201).json({
 				message: `Category ${name} successfully created`,
 				object: category
