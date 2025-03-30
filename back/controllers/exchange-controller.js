@@ -4,22 +4,20 @@ const getDay = require("../util/day-formula");
 
 class ExchangeController {
 	async createOrUpdateExchange(req, res, next) {
-		const { exchangeCourse } = req.body;
+		const { currencyList } = req.body;
 		const currentDay = getDay();
 		let result;
 		try {
 			const candidate = await Exchange.findOne({ where: { updated_at: currentDay } });
 			if (!candidate) {
 				const newExchangeCourse = await Exchange.create({
-					USD: exchangeCourse.USD,
-					EUR: exchangeCourse.EUR,
+					currencyList,
 					created_at: currentDay,
 					updated_at: currentDay
 				});
 				result = { result: newExchangeCourse };
 			} else {
-				candidate.USD = exchangeCourse.USD,
-				candidate.EUR = exchangeCourse.EUR;
+				candidate.currencyList = currencyList;
 				candidate.updated_at = currentDay;
 				await candidate.save();
 				result = { result: candidate };

@@ -20,4 +20,5 @@ module.exports = class ApiError extends Error {
 	static SearchError(param) {
 		return new ApiError(404, `Cannot find ${param.model} with current ${param.name}: ${param.value}.`);
 	}
+	
 }

@@ -5,7 +5,7 @@ const brandController = require("../controllers/brand-controller");
 const router = new Router();
 
 router.post("/new", brandController.createBrand);
-router.patch("/discount/:id", brandController.updateBrandProductsDiscount);
+//router.patch("/discount/:id", brandController.updateBrandProductsDiscount);
 
 router.get("/list", brandController.getBrandList);
 router.get("/:id", brandController.getBrandById);
