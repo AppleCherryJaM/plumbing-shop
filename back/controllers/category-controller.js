@@ -1,19 +1,21 @@
 const sequelize = require("sequelize");
 
-const {Category, Product} = require("../models/db-models");
+const {Category} = require("../models/db-models");
 const ApiError = require("../exceptions/api-error");
 
 class CategoryController{
 
 	async createCategory(req, res, next) {
-		const { name, parent, currencyCourse } = req.body;
+		const { name, parent } = req.body;
 		try {
-			let category;
-			if (!parent) {
-				category = await Category.create({ name, currencyExchange: JSON.stringify(currencyCourse) });
-			} else {
-				category = await Category.create({ name, parentId: parent, currencyExchange: JSON.stringify(currencyCourse) });
-			}
+			let category = {name};
+			console.log("Parent: ", parent);
+			if (parent) category = { ...category, parentCategoryId: parent };
+			// if (currencyCourse) category = {...category, currencyCourse: JSON.stringify(currencyCourse)};
+			//if (totalQuantity) category = { ...category, totalQuantity };
+			console.log("Category: ", category);
+			category = await Category.create(category);
+
 			return res.status(201).json({
 				message: `Category ${name} successfully created`,
 				object: category
@@ -22,7 +24,7 @@ class CategoryController{
 			console.log(error);
 			return next(error);
 		}
-	}
+	}ч
 
 	async getCategoryList(req, res, next) {
 		try {

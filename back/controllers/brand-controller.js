@@ -1,13 +1,44 @@
 const ApiError = require("../exceptions/api-error");
-const {Brand, CategoryBrand, Product, Category} = require("../models/db-models");
+const {Brand, CategoryBrand, Exchange, Product, Discount} = require("../models/db-models");
 
 class BrandController {
+
+	async _getBrandsExchangeCourse(brands) {
+		try {
+			brandIdList = [];
+				brands.forEach(brand => {
+					if (!brandIdList.includes(brand.id)) {
+						brandIdList.push(brand.id);
+					}
+				});
+				if (brandIdList.length > 0) {
+					const exchangeCourseList = Exchange.findAll({
+						where: {
+							[Op.in]: brandIdList
+						}
+					});
+					if (exchangeCourseList.length > 0) {
+						brands.forEach(brand => {
+							for (let item of exchangeCourseList) {
+								if (item.brandId === brand.id) {
+									brand.exchangeCourse = item.currencyList
+								}
+							}
+						})
+					}
+				}
+		} catch (error) {
+			return error;
+		}
+		return brands;
+	} 
+
 	async createBrand(req, res, next) {
 		const { name } = req.body;
 		try {
 			const brand = await Brand.create({name});
 			return res.status(201).json({
-				message: `Brand ${brand} successfully created`,
+				message: `Brand ${name} successfully created`,
 				object: brand
 			});	
 		} catch (error) {
@@ -16,12 +47,21 @@ class BrandController {
 		}
 	}
 
-	async getBrandList(req, res, next) {
+	async getBrandList(req, res, next) { 
 		try {
-			const brands = await Brand.findAll();
-			if (!brands && brands.length === 0) {
-				throw ApiError.SearchError();
+			let brands = await Brand.findAll();
+			const cbList = await CategoryBrand.findAll();
+			if (!brands || brands.length === 0) {4
+				throw ApiError.SearchError({model: "Brand"});
 			}
+			brands = await this._getBrandsExchangeCourse(brands);
+			brands.forEach(brand => {
+				for(let cb of cbList) {
+					if (brand.id === cb.brandId) {
+						brand.categories.push(cb.categoryId);
+					}
+				}
+			});
 			return res.status(200).json({result: brands});
 		} catch (error) {
 			return next(error);
@@ -32,48 +72,21 @@ class BrandController {
 		const { id } = req.params;
 		try {
 			const searchResult = await Brand.findByPk(id);
-			if (searchResult === null) {
-				throw ApiError.SearchError();
-			}
-			return res.status(200).json({result: searchResult});
-		} catch (error) {
-			return next(error);
-		}
-	}
-
-	async updateBrandProductsDiscount(req, res, next) {
-		const { id } = req.params;
-		const { categories } = req.body; // categories = [{ categoryId, discountPercent }]
-		let promises = [], categoryIds = [];
-		try {
-			const brandCategories = await CategoryBrand.findAll({
+			const cbList = await CategoryBrand.findAll({
 				where: {
 					brandId: id
 				}
 			});
-			brandCategories.forEach(item => {
-				categoryIds.push(item.categoryId);
-				for (let category of categories) {
-					if (category.id === item.categoryId) {
-						promises.push(
-							CategoryBrand.update(
-								{ discountPercent: category.discountPercent },
-								{ where: { brandId: id } }
-							)
-						);
-					}
-				}
+			if (searchResult === null) {
+				throw ApiError.SearchError();
+			}
+			let result = await this._getBrandsExchangeCourse(searchResult);
+			result.categories = [];
+			cbList.forEach(item => {
+				result.categories.push(item.categoryId);
 			});
-
-			Promise.all(promises).then(() => {
-				console.log("Success");
-			});
-
-			return res.status(200).json({
-				result: { message: `Discount percents updated` } 
-			});
+			return res.status(200).json({result: result});
 		} catch (error) {
-			console.log(error);
 			return next(error);
 		}
 	}
@@ -81,6 +94,21 @@ class BrandController {
 	async deleteBrand(req, res, next) {
 		const { id } = req.params;
 		try {
+			const deletedExchangeCourse = await Exchange.destroy({
+				where: {
+					brandId: id
+				}
+			});
+			const deletedProducts = await Product.destroy({
+				where: {
+					brandId: id
+				}
+			});
+			const deletedCB = await CategoryBrand.destroy({
+				where: {
+					brandId: id
+				}
+			});
 			const deletedBrand = await Brand.destroy({
 				where: {
 					id: id

@@ -1,19 +1,28 @@
 const uuid = require("uuid");
 const path = require("path");
-const { Op } = require("sequelize");
+const { Op, QueryTypes, where } = require("sequelize");
 
 const ApiError = require("../exceptions/api-error");
-const { Product, Category, ProductInfo, CategoryBrand, Exchange, CategoryProduct } = require('../models/db-models');
+const { Product, Category, ProductInfo, Exchange, Discount, CategoryBrand} = require('../models/db-models');
 const getDay = require("../util/day-formula");
-const priceFormula = require("../util/priceFormula");
+const priceFormula = require("../util/price-formula");
+const productService = require("../services/product-service");
 
 class ProductController {
 
 	async createProduct(req, res, next) {
-		const { name, categories, price, optPrice, brandId, info, totalQuantity } = req.body;
+		const { 
+			name, 
+			categories, 
+			retailPrice, 
+			wholesalePrice, 
+			brandId, 
+			info, 
+			totalQuantity 
+		} = req.body;
 		let result; 
 
-		const images = req.files.images;
+		const images = req.files.images; // Mechanism for saving images in folder
 		let files = [];
 		if (images && images.length > 0) {
 			images.forEach(image => {
@@ -24,45 +33,97 @@ class ProductController {
 				));
 			});
 		}
+
+		const parsedCategories = JSON.parse(categories);
 		try {
 			const candidate = await Product.findOne({ where: { name } });
 			if (candidate) return next(ApiError.BadAPIRequest('Current product exists'));
 			const candidateCategories = await Category.findAll({
 				where: {
 					id: {
-						[Op.in]: JSON.parse(categories)
+						[Op.in]: parsedCategories
 					}
 				}
 			});
 
-			if (candidateCategories.length < JSON.parse(categories).length) return next(ApiError.SearchError({
-				model: 'Category', 
-				name: "Id", 
-				value: JSON.stringify(candidateCategories)
-			}));
+			if (candidateCategories.length < parsedCategories.length) {
+				return next(ApiError.SearchError({
+					model: 'Category', 
+					name: "Id", 
+					value: JSON.stringify(candidateCategories)
+				}));
+			}
 
-			const opt = optPrice || price;
+			const opt = wholesalePrice || retailPrice;
 
 			const newObj = await Product.create({
 				name, price, 
-				optPrice: opt, 
+				wholesalePrice: opt, 
 				images: files,
 				brandId: brandId,
 				totalQuantity: totalQuantity || 0
 			});
-			await newObj.addCategory(candidateCategories);
 
 			if (info) {
 				const parsedInfo = JSON.parse(info);
+				let productInfoArray = [];
 				parsedInfo.forEach(i =>
-					ProductInfo.create({
+					productInfoArray.push({
 						title: i.title,
 						description: i.description,
 						productId: newObj.id
 					})
 				);
+				ProductInfo.bulkCreate(productInfoArray);
 			}
 
+			const cbSearch = [] || await CategoryBrand.findAll({
+				where: {
+					brandId: newObj.brandId,
+					categoryId: {
+						[Op.in]: parsedCategories
+					}
+				}
+			});
+
+			let newCB = [];
+			if (!cbSearch && cbSearch.length === 0) {
+				for (let cId of parsedCategories) {
+					newCB.push({ 
+						categoryId: cId, 
+						brandId: newObj.brandId, 
+						productIdList: [newObj.id]
+					});
+				}
+			} else if (cbSearch.length < parsedCategories.length) {
+				parsedCategories.forEach(category => {
+					let coincidence = 0;
+					for (let cb of cbSearch) {
+						if (cb.categoryId === category) {
+							cb.productIdList.push(newObj.id);
+							coincidence++;
+						}
+					}
+					if (coincidence === 0) { 
+						newCB.push({
+							categoryId: category, 
+							brandId: newObj.brandId,
+							productIdList: [newObj.id]
+						});
+					} else {
+						cbSearch.forEach(cb => {
+							cb.productIdList.push(newObj.id);
+						});
+					}
+				});
+				
+				if (newCB.length > 0){
+					CategoryBrand.bulkCreate(newCB);
+				} else {
+					cbSearch.save();
+				}
+			} 
+			
 			result = await Product.findOne({
 				where: {
 					name: name
@@ -77,9 +138,8 @@ class ProductController {
 	}
 
 	async getProducts(req, res, next) {
-		const { brandId, cIds } = req.query; // categoryIds = [id]
-		let categoryIds = cIds ? JSON.parse(cIds) : undefined;
-		let products, categoryBrands, categoryProducts;
+		const { brandId, cIds, currency } = req.query; // categoryIds = [id]
+		const categoryIds = cIds ? JSON.parse(cIds) : undefined;
 
 		try {
 			const currentDay = getDay();
@@ -91,78 +151,41 @@ class ProductController {
 				}
 			});
 
-			const exchangeAdapter = {
-				USD: (price) => price * exchangeCourse.USD,
-				EUR: (price) => price * exchangeCourse.EUR
-			};
+			const currencyList = JSON.parse(exchangeCourse.currencyList);
+			const keysList = Object.keys(currencyList);
 
-			if (!brandId && !categoryIds) {
-				products = await Product.findAll();
-				categoryBrands = await CategoryBrand.findAll();
-			} else if (brandId && !categoryIds) {
-				products = await Product.findAll({
-					where: {
-						brandId: brandId
-					}
-				});
-				categoryBrands = await CategoryBrand.findAll({
-					where: {
-						brandId: brandId
-					}
-				});
-			} else if (!brandId && categoryIds && categoryIds.length > 0) {
-				let productIds = [];
-				categoryProducts = await CategoryProduct.findAll({ where: { categoryId: categoryIds } });
+			let exchangeAdapter = {};
 
-				categoryProducts.forEach(item => {
-					if (!productIds.includes(item.productId)) {
-						productIds.push(item.productId);
-					}
-				});
-				products = await Product.findAll({
-					where: {
-						id: {
-							[Op.in]: productIds
-						}
-					}
-				});
-				categoryBrands = await CategoryBrand.findAll({
-					where: {
-						categoryId: { [Op.in]: categoryIds }
-					}
-				});
-			} else {
-				let productIds = [];
-				categoryProducts = await CategoryProduct.findAll({ where: { id: { [Op.in]: categoryIds } } });
-				categoryProducts.forEach(item => {
-					if (!productIds.includes(item.productId)) {
-						productIds.push(item.productId);
-					}
-				});
-				products = await Product.findAll({
-					where: {
-						brandId: brandId,
-						id: {
-							[Op.in]: productIds
-						}
-					}
-				});
-				categoryBrands = await CategoryBrand.findAll({
-					where: {
-						brandId: brandId,
-						categoryId: {[Op.in]: categoryIds}
-					}
-				});
+			for (let key of keysList) {
+				exchangeAdapter = {
+					...exchangeAdapter, 
+					key: (price) => price * currencyList[key]
+				}
 			}
-			products.forEach(product => {
-				product.price = exchangeAdapter[product.priceCurrency];
 
-				for (cb of categoryBrands) {
-					if (cb.discountPercent !== 0) {
-						if (product.priceCurrency !== "UAH" && cb.categoryId === product.categoryId && cb.brandId === product.brandId) {
-							product.price = priceFormula(product.price, cb.discountPercent);
-							product.priceCurrency = 'UAH';
-						}
+			const products = await productService.getProducts(brandId, categoryIds);
+			const discountList = await Discount.findAll();
+
+			products.forEach(product => {
+				if (product.priceCurrency !== currency) {
+					product.retailPrice = exchangeAdapter[currency](product.retailPrice);
+					product.wholesalePrice = exchangeAdapter[currency](product.wholesalePrice);
+					product.discountRetailPrice = product.retailPrice;
+				}
+				for (let discount of discountList) {
+					const cases = {
+						brandCase: (discount.brandId !== null && product.brandId !== null) && discount.brandId === product.brandId,
+						categoryCase: product.categoryIdList.includes(discount.categoryId),
+						productCase: product.id === discount.productId
+					}
+
+					if (cases.brandCase || cases.productCase) {
+						product.discountRetailPrice = priceFormula(product.retailPrice, discount.discountValue);
+						break;
+					}
+
+					if (cases.categoryCase) {
+						product.discountRetailPrice = priceFormula(product.retailPrice, discount.discountValue);
 					}
 				}
 			});
@@ -179,7 +202,7 @@ class ProductController {
 		try {
 			const searchResult = await sequelize.query(`SELECT id, name, images FROM products WHERE name LIKE '${search}%'`);
 			
-			if (!searchResult) return next(ApiError.SearchError());
+			if (!searchResult) return next(ApiError.SearchError({ model: "Product", name: "name", value: search }));
 
 			return res.status(200).json({ result: searchResult });
 		} catch (error) {
@@ -193,7 +216,7 @@ class ProductController {
 		try {
 			const result = await Product.findByPk(id);
 
-			if (!result) return next(ApiError.SearchError());
+			if (!result) return next(ApiError.SearchError({ model: "Product", name: "id", value: id }));
 
 			return res.status(200).json({result});
 		} catch (error) {
@@ -204,70 +227,27 @@ class ProductController {
 
 	async updateProduct(req, res, next) {
 		const { id } = req.params;
-		const { price, optPrice } = req.body;
+		const { price, wholesalePrice } = req.body;
 		try {
 			const updatedObject = await Product.findByPk(id);
 
-			if (!updatedObject) return next(ApiError.SearchError());
+			if (!updatedObject) return next(ApiError.SearchError({model: "Product", name:"id", value:id}));
 
-			if ( price && optPrice ) {
+			if ( price && wholesalePrice ) {
 				updatedObject.price = price;
-				updatedObject.opt_price = optPrice;
+				updatedObject.wholesalePrice = wholesalePrice;
 			}
-			if (price && !optPrice) {
+			if (price && !wholesalePrice) {
 				updatedObject.price = price;
 			}
-			if (!price && optPrice) {
-				updatedObject.opt_price = optPrice;
+			if (!price && wholesalePrice) {
+				updatedObject.wholesalePrice = wholesalePrice;
 			}
 			await updatedObject.save();
 			return res.status(200).json({
 				message: "Object updated.",
 				updatedObject
 			});
-		} catch (error) {
-			console.log(error);
-			return next(error);
-		}
-	}
-
-	async updateProductPriceByBrandId(req, res, next) {
-		const { brandId } = req.params;
-		const { price, optPrice } = req.body;
-		let updatedObjects;
-		try {
-			if (!price && !optPrice) return next(new ApiError(422, "Cannot find price fields in request body."));
-
-			if (price && !optPrice) {
-				updatedObjects = await Product.update({
-					price: price
-				}, {
-					where: {
-						brand: brandId
-					}
-				});
-			}
-			if (!price && optPrice) {
-				updatedObjects = await Product.update({
-					opt_price: optPrice
-				}, {
-					where: {
-						brand: brandId
-					}
-				});
-			}
-			if (price && optPrice) {
-				updatedObjects = await Product.update({
-					price: price, 
-					opt_price: optPrice
-				}, {
-					where: {
-						brand: brandId
-					}
-				});
-			}
-
-			return res.status(200).json({ message: "Products updated.", result: updatedObjects });
 		} catch (error) {
 			console.log(error);
 			return next(error);

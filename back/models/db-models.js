@@ -22,11 +22,19 @@ const User = sequelize.define('user', {
 		type: DataTypes.STRING,
 		allowNull: false
 	},
+	activationLink: {
+		type: DataTypes.STRING,
+		allowNull: false
+	},
+	isActivated: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false
+	},
 	role: {
 		type: DataTypes.STRING,
 		defaultValue: "Guest"
 	}
-});
+}, { timestamps: false });
 
 // const Card = sequelize.define('bank_card', {
 // 	id: {
@@ -65,17 +73,14 @@ const Category = sequelize.define('category', {
 	},
 	parentCategoryId: {
 		type: DataTypes.INTEGER,
-		allowNull: true
+		allowNull: true,
+		references: {
+			model: this.Category,
+			key: 'id'
+		}
 	}
-});
+}, { timestamps: false });
 
-const CategoryProduct = sequelize.define('category_product', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true
-	}
-});
 
 const Brand = sequelize.define('brand', {
 	id: {
@@ -88,7 +93,15 @@ const Brand = sequelize.define('brand', {
 		unique: true, 
 		allowNull: false
 	}
-});
+}, { timestamps: false });
+
+// const CategoryProduct = sequelize.define('category_product', {
+// 	id: {
+// 		type: DataTypes.INTEGER,
+// 		primaryKey: true,
+// 		autoIncrement: true
+// 	}
+// }, { timestamps: false });
 
 const CategoryBrand = sequelize.define('category_brand', {
 	id: {
@@ -96,11 +109,27 @@ const CategoryBrand = sequelize.define('category_brand', {
 		primaryKey: true,
 		autoIncrement: true
 	},
-	discountPercent: {
-		type: DataTypes.FLOAT,
-		defaultValue: 0
+	categoryId: {
+		type: DataTypes.INTEGER,
+		allowNull: true,
+		references: {
+			model: Category,
+			key: 'id'
+		}
+	},
+	brandId: {
+		type: DataTypes.INTEGER,
+		allowNull: true,
+		references: {
+			model: Brand,
+			key: 'id'
+		}
+	},
+	productIdList: {
+		type: DataTypes.ARRAY(DataTypes.UUID),
+		allowNull: false
 	}
-});
+}, { timestamps: false });	
 
 const Product = sequelize.define('product', {
 	id: {
@@ -113,11 +142,11 @@ const Product = sequelize.define('product', {
 		unique: true,
 		allowNull: false
 	},
-	price: {
+	retailPrice: {
 		type: DataTypes.FLOAT,
 		allowNull: false
 	},
-	optPrice: {
+	wholesalePrice: {
 		type: DataTypes.FLOAT,
 		allowNull: false
 	},
@@ -136,12 +165,8 @@ const Product = sequelize.define('product', {
 	totalQuantity: {
 		type: DataTypes.INTEGER,
 		defaultValue: 0
-	},
-	// categoryId: {
-	// 	type: DataTypes.INTEGER,
-	// 	allowNull: false
-	// }
-});
+	}
+}, { timestamps: false });
 
 const Order = sequelize.define('order', {
 	id: {
@@ -165,10 +190,14 @@ const Order = sequelize.define('order', {
 		defaultValue: true
 	},
 	deliveryAddress: {
-		type: DataTypes.STRING,
+		type: DataTypes.UUID,
 		allowNull: true
-	} 
-});
+	},
+	created_at: {
+		type: DataTypes.STRING,
+		allowNull: false
+	}
+}, { timestamps: false });
 
 const ProductOrder = sequelize.define('product_order', {
 	id: {
@@ -255,14 +284,16 @@ const OrderStore = sequelize.define('order_store', {
 		references: {
 			model: Store,
 			key: "id"
-		}
+		},
+		allowNull: false
 	},
 	to: {
 		type: DataTypes.UUID,
 		references: {
 			model: Store,
 			key: 'id'
-		}
+		},
+		allowNull: true
 	}
 });
 
@@ -289,18 +320,57 @@ const ProductInfo = sequelize.define('product_info', {
 	}
 });
 
+const Discount = sequelize.define('discount', {
+	id: {
+		type: DataTypes.UUID,
+		defaultValue: DataTypes.UUIDV4,
+		primaryKey: true
+	},
+	discountValue: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0
+	},
+	from: {
+		type: DataTypes.STRING,
+		allowNull: false
+	},
+	to: {
+		type: DataTypes.STRING,
+		allowNull: false
+	},
+	brandId: {
+		type: DataTypes.INTEGER,
+		references: {
+			model: Brand,
+			key: 'id'
+		},
+		allowNull: true
+	},
+	categoryId: {
+		type: DataTypes.INTEGER,
+		references: {
+			model: Category,
+			key: 'id'
+		},
+		allowNull: true
+	}, 
+	productId: {
+		type: DataTypes.UUID,
+		references: {
+			model: Product,
+			key: 'id'
+		}
+	}
+});
+
 const Exchange = sequelize.define('exchange', {
 	id: {
 		type: DataTypes.UUID,
 		defaultValue: DataTypes.UUIDV4,
 		primaryKey: true
 	},
-	USD: {
-		type: DataTypes.FLOAT,
-		allowNull: false
-	},
-	EUR: {
-		type: DataTypes.FLOAT,
+	currencyList: {
+		type: DataTypes.JSON,
 		allowNull: false
 	},
 	updated_at: {
@@ -310,6 +380,37 @@ const Exchange = sequelize.define('exchange', {
 	created_at: {
 		type: DataTypes.STRING,
 		allowNull: false
+	},
+	brandId: {
+		type: DataTypes.INTEGER,
+		references: {
+			model: Brand,
+			key: "id",
+			allowNull: true
+		}
+	},
+	categoryId: {
+		type: DataTypes.INTEGER,
+		references: {
+			model: Category,
+			key: "id",
+			allowNull: true
+		}
+	}
+}, { timestamps: false });
+
+const Token = sequelize.define('token', {
+	refreshToken: {
+		type: DataTypes.TEXT,
+		allowNull: false
+	},
+	user_id: {
+		type: DataTypes.UUID,
+		references: {
+			model: User,
+			key: "id",
+			allowNull: false
+		}
 	}
 }, { timestamps: false });
 
@@ -334,6 +435,9 @@ Category.hasMany(Category, {
 });
 Category.belongsTo(Category);
 
+User.hasMany(Token);
+Token.belongsTo(User);
+
 //ProductStore
 Store.belongsToMany(Product,{ through: ProductStore});
 Product.belongsToMany(Store, { through: ProductStore });
@@ -350,10 +454,9 @@ Store.belongsToMany(Order, { through: OrderStore });
 Brand.belongsToMany(Category, { through: CategoryBrand });
 Category.belongsToMany(Brand, { through: CategoryBrand });
 
-//CategoryProduct
-Product.belongsToMany(Category, { through: CategoryProduct });
-Category.belongsToMany(Product, { through: CategoryProduct });
-
+//Discount
+Brand.belongsToMany(Category, { through: Discount });
+Category.belongsToMany(Brand, { through: Discount });
 module.exports = {
 	User,
 	Category,
@@ -366,6 +469,7 @@ module.exports = {
 	OrderStore,
 	ProductInfo,
 	CategoryBrand,
-	CategoryProduct,
-	Exchange
+	Discount,
+	Exchange, 
+	Token
 };

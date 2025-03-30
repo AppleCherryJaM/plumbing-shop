@@ -1,18 +1,27 @@
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const ApiError = require('../exceptions/api-error');
+const tokenService = require('../services/token-service');
 
 module.exports = function (req, res, next) {
-	if (req.method === "OPTIONS") {
-		next()
-	}
 	try {
-		const token = req.headers.authorization.split(' ')[1] // Bearer asfasnfkajsfnjk
-		if (!token) {
-			return res.status(401).json({ message: "Unauthorized" })
+		const authHeader = req.headers.authorization;
+		if (!authHeader) {
+			return next(ApiError.UnauthorizedError());
 		}
-		const decoded = jwt.verify(token, process.env.JWT_ACCESS_SECRET)
-		req.user = decoded
-		next()
-	} catch (e) {
-		res.status(401).json({ message: "Unauthorized" })
+		const accessToken = authHeader.split(" ")[1];
+		if (!accessToken) {
+			return next(ApiError.UnauthorizedError());
+		}
+
+		const userData = tokenService.validateToken(accessToken, "access");
+
+		if (!userData) {
+			return next(ApiError.UnauthorizedError());
+		}
+
+		req.user = userData;
+		next();
+	} catch (error) {
+		return next(ApiError.UnauthorizedError())
 	}
 };

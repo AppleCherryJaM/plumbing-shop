@@ -5,13 +5,11 @@ class StoreController {
 
 	async createStore(req, res, next) {
 		const { location } = req.body;
-		let newStore;
 		try {
 			const candidate = await Store.findOne({where: { location } });
-
 			if (candidate) return next(new ApiError.BadAPIRequest("Store with current location is exists"));
 
-			newStore = await Store.create({
+			const newStore = await Store.create({
 				location
 			});
 
@@ -27,10 +25,9 @@ class StoreController {
 
 	async getStore(req, res, next) {
 		const { id } = req.params;
-		let store;
 		try {
-			store = await Store.findByPk(id);
-			if (!store) return next(ApiError.BadAPIRequest("Cannot find store with current id"));
+			const store = await Store.findByPk(id);
+			if (!store) return next(ApiError.SearchError({model: "Store", name: "id", value: id}));
 			return res.status(200).json({ result: store });
 		} catch (error) {
 			console.log(error);
@@ -43,7 +40,7 @@ class StoreController {
 			const stores = await Store.findAll();
 
 			if (!stores && stores.length < 0) {
-				return next(ApiError.BadAPIRequest());
+				return next(ApiError.BadAPIRequest("The Stores-table is empty"));
 			}
 
 			return res.status(200).json({ result: stores });
@@ -58,19 +55,19 @@ class StoreController {
 		const { products } = req.body; // product = { id, quantity }
 
 		try {
-			products.foreach(async (product) => {
-				await ProductStore.create({
+			let productStore = [];
+			products.forEach((product) => {
+				productStore.push({
 					product_id: product.id,
 					product_quantity: product.quantity,
 					store_id: sid
 				});
 			});
+			await ProductStore.bulkCreate(productStore);
+			return res.status(200).json({ message: 'Relation created', result: productStore });
 		} catch (error) {
 			console.log(error);
 			return next(error);
-		} finally {
-			console.log("Created");
-			return res.status(200).json({ message: 'Relation created' });
 		}
 	}
 
@@ -98,7 +95,8 @@ class StoreController {
 		try {
 			const deletedStore = await Store.destroy({where: { id } });
 			return res.status(200).json({
-				message: `Store deleted`
+				message: `Store deleted`,
+				deletedStore
 			});
 		} catch (error) {
 			console.log(error);

@@ -1,16 +1,22 @@
 const router = require('express').Router();
+const {body} = require("express-validator");
 
 const userController = require('../controllers/user-controller');
 const authMiddleware = require("../middlewares/auth-middleware");
 
-router.post('/registration', userController.registration);
-router.post('/login', userController.login);
-router.get('/auth', authMiddleware, userController.check)
+router.post('/registration',
+	body("email").isEmail(),
+	body("password").isLength({min: 4, max: 16}),
+	userController.registration);
+router.post('/login',
+	body("email").isEmail(),
+	body("password").isLength({ min: 4, max: 16 }),
+	userController.login);
+router.post('/logout', authMiddleware, userController.logout);
 
-router.delete('/:id', userController.deleteUser);
-//router.get('/userList', userController.getAllUsers);
+router.get("/activate/:link", userController.activate);
+router.get("/refresh", userController.refresh);
 
-// router.patch();
-
+router.delete("/:id", authMiddleware, userController.deleteUser);
 
 module.exports = router;
