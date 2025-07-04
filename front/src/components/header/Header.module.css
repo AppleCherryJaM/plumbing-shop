@@ -1,0 +1,44 @@
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: #add8e6;
+	padding: 16px 32px;
+	font-family: 'Segoe UI', sans-serif;
+}
+
+.logo {
+	font-weight: bold;
+	font-size: 20px;
+}
+
+.nav {
+	display: flex;
+	gap: 24px;
+}
+
+.nav a {
+	text-decoration: none;
+	color: #000;
+	font-weight: bold;
+	transition: 0.2s;
+}
+
+.nav a:hover {
+	text-decoration: underline;
+}
+
+.login-button {
+	padding: 8px 16px;
+	border: none;
+	background-color: #e6f4fa;
+	color: #000;
+	border-radius: 6px;
+	cursor: pointer;
+	font-weight: 600;
+	transition: 0.3s;
+}
+
+.login-button:hover {
+	background-color: #d0edf9;
+}

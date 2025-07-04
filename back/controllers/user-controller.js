@@ -28,7 +28,9 @@ class UserController {
 			const userData = await userService.registration(email, password, phone, name);
 			res.cookie('refreshToken', userData.refreshToken, {
 				maxAge: 30*24*60*60*1000, 
-				httpOnly: true
+				httpOnly: true,
+				secure: false,
+				sameSite: "lax"
 			});
 			return res.json(userData);
 		} catch (error) {
@@ -46,7 +48,7 @@ class UserController {
 			return next(error);
 		}
 	}
-
+	
 	async login(req, res, next) {
 		try {
 			const { email, password } = req.body;
@@ -55,7 +57,9 @@ class UserController {
 
 			res.cookie('refreshToken', userData.refreshToken, {
 				maxAge: 30 * 24 * 60 * 60 * 1000,
-				httpOnly: true
+				httpOnly: true,
+				secure: false,
+				sameSite: "lax"
 			});
 			return res.json(userData);
 		} catch (error) {

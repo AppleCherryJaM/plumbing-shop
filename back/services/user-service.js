@@ -42,8 +42,6 @@ class UserService {
 			}
 		});
 
-		console.log("User: ", user);
-
 		if (!user) {
 			throw ApiError.SearchError({
 				model: "User",

@@ -17,6 +17,8 @@ const discountController = require('./controllers/discount-controller');
 const dayFormula = require("./util/day-formula");
 
 const PORT = process.env.PORT;
+const CLIENT_URL = process.env.CLIENT_URL;
+
 const app = express();
 
 app.use(express.json());
@@ -24,7 +26,10 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + 'static'));
 app.use(fileUpload({}));
-app.use(cors());
+app.use("*", cors({
+    credentials: true,
+    origin: CLIENT_URL
+}));
 app.use(cookieParser());
 
 app.use("/api", mainRouter);
