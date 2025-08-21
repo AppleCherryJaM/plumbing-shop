@@ -1,23 +1,30 @@
-import React from 'react'
-import styles from "./Header.module.css";
+import React, { useState } from 'react';
 
-const Header = () => {
+import { BurgerButton, SearchToggle, RegistrationToggle } from '../components';
+
+import styles from './Header.module.css';
+import logo from '/images/vas-blue-logo.png';
+
+
+const Header = ({ onAuthButtonClick, menuOpen, toggleMenu }) => {
+
   return (
-    <header className={styles.header}>
-      <div className={styles.logo}>Logo</div>
-
-      <nav className={styles.nav}>
-        <a href="/" className={styles.navLink}>Home</a>
-        <a href="/catalog" className={styles.navLink}>Catalog</a>
-        <a href="/cart" className={styles.navLink}>Cart</a>
-        <a href="/orders" className={styles.navLink}>Orders</a>
-      </nav>
-
-      <div className={styles.rightBlock}>
-        {/* Место под кнопку входа, профиль или поиск */}
-        <button className={styles.loginButton}>Login</button>
-      </div>
-    </header>
+    <>
+      <header className={styles.siteHeader}>
+        <div className={styles.container}>
+          <div className={styles.leftBlock}>
+            <BurgerButton isOpen={menuOpen} onClick={toggleMenu} />
+            <a href="/" className={styles.logo}>
+            <img src={logo} alt="Логотип" />
+          </a>
+          </div>
+          <div className={styles.rightBlock}>
+            <SearchToggle/>
+            <RegistrationToggle onAuthButtonClick={onAuthButtonClick}/>
+          </div>
+        </div>
+      </header>
+    </>
   );
 };
 

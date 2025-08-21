@@ -1,0 +1,111 @@
+/* Стили для компонента Slide */
+.slide {
+	position: relative;
+	height: 400px;
+	display: none;
+}
+
+.slide.active {
+	display: block;
+}
+
+.slideContent {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	text-align: center;
+	color: white;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+	z-index: 2;
+	max-width: 80%;
+}
+
+.slideTitle {
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-bottom: 1rem;
+	line-height: 1.2;
+}
+
+.slideSubtitle {
+	font-size: 1.2rem;
+	margin-bottom: 2rem;
+	line-height: 1.5;
+}
+
+.slideButton {
+	background: var(--color-primary);
+	color: white;
+	border: none;
+	padding: 12px 30px;
+	border-radius: 25px;
+	font-size: 1rem;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	text-transform: uppercase;
+}
+
+.slideButton:hover {
+	background: var(--color-primary-dark);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.bannerImage {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 12px;
+}
+
+/* Адаптивность для Slide */
+@media (max-width: 992px) {
+	.slideTitle {
+		font-size: 2rem;
+	}
+
+	.slideSubtitle {
+		font-size: 1.1rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.slide {
+		height: 300px;
+	}
+
+	.slideTitle {
+		font-size: 1.8rem;
+	}
+
+	.slideSubtitle {
+		font-size: 1rem;
+		margin-bottom: 1.5rem;
+	}
+
+	.slideButton {
+		padding: 10px 25px;
+		font-size: 0.9rem;
+	}
+}
+
+@media (max-width: 576px) {
+	.slide {
+		height: 250px;
+	}
+
+	.slideTitle {
+		font-size: 1.5rem;
+	}
+
+	.slideSubtitle {
+		font-size: 0.9rem;
+		margin-bottom: 1rem;
+	}
+
+	.slideContent {
+		max-width: 90%;
+	}
+}

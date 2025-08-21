@@ -1,0 +1,54 @@
+.burgerWrapper {
+		display: flex;
+		align-items: center;
+		transition: all 0.4s ease;
+		width: 40px;
+		height: 40px;
+		background-color: var(--color-white);
+		border-radius: 50px;
+		overflow: hidden;
+		padding: 5px;
+		box-shadow: var(--box-shadow-light);
+		position: relative;
+		cursor: pointer;
+}
+
+.burgerWrapper:hover {
+	background-color: #add8e6;
+	box-shadow: 3px 1px 1px 1px #8cafbb;
+}
+
+.burger {
+	/* width: 24px; */
+	height: 18px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	background: transparent;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	position: relative;
+	margin: auto;
+	width: 50%;
+}
+
+.burger span {
+	display: block;
+	height: 2px;
+	background: #333;
+	border-radius: 2px;
+	transition: all 0.3s ease;
+}
+
+.burger.active span:nth-child(1) {
+	transform: rotate(45deg) translate(5px, 5px);
+}
+
+.burger.active span:nth-child(2) {
+	opacity: 0;
+}
+
+.burger.active span:nth-child(3) {
+	transform: rotate(-45deg) translate(5px, -5px);
+}

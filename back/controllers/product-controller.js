@@ -138,7 +138,7 @@ class ProductController {
 	}
 
 	async getProducts(req, res, next) {
-		const { brandId, cIds, currency } = req.query; // categoryIds = [id]
+		const { brandId, cIds, currency } = req.body; // categoryIds = [id]
 		const categoryIds = cIds ? JSON.parse(cIds) : undefined;
 
 		try {
@@ -198,11 +198,11 @@ class ProductController {
 	}
 	
 	async searchProduct(req, res, next) {
-		const { search } = req.params;
+		const { query } = req.params;
 		try {
-			const searchResult = await sequelize.query(`SELECT id, name, images FROM products WHERE name LIKE '${search}%'`);
+			const searchResult = await sequelize.query(`SELECT id, name, images FROM products WHERE name LIKE '${query}%'`);
 			
-			if (!searchResult) return next(ApiError.SearchError({ model: "Product", name: "name", value: search }));
+			if (!searchResult) return next(ApiError.SearchError({ model: "Product", name: "name", value: query }));
 
 			return res.status(200).json({ result: searchResult });
 		} catch (error) {

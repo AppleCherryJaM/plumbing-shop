@@ -1,0 +1,336 @@
+.productsCarousel {
+	position: relative;
+	padding: 0 40px;
+	margin: 20px 0;
+	width: 100%;
+	display: flex;
+	align-items: center;
+}
+
+.carouselViewport {
+	overflow: hidden;
+	width: 100%;
+	flex-grow: 1;
+}
+
+.carouselTrack {
+	display: flex;
+	gap: 20px;
+	transition: transform 0.5s ease;
+	width: max-content;
+}
+
+.carouselItem {
+	flex-shrink: 0;
+	padding: 0 10px;
+	box-sizing: border-box;
+	animation: slideIn 0.5s ease forwards;
+}
+
+.carouselItem>* {
+	max-width: 100%;
+	overflow: hidden;
+}
+
+.carouselArrow {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background: white;
+	color: var(--color-text-light);
+	border: none;
+	cursor: pointer;
+	font-size: 18px;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 0 10px;
+	box-shadow: var(--box-shadow-light);
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+}
+
+.carouselArrow:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+	box-shadow: none;
+}
+
+.carouselArrow:hover:not(:disabled) {
+	background: #add8e6;
+	box-shadow: 3px 1px 1px 1px #8cafbb;
+}
+
+.carouselArrow.prev {
+	order: 1;
+}
+
+.carouselViewport {
+	order: 2;
+	flex-grow: 1;
+}
+
+.carouselArrow.next {
+	order: 3;
+}
+
+/* Анимации */
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Стили для баннеров */
+.bannerContainer {
+	position: relative;
+	max-width: 1200px;
+	margin: 0 auto;
+	overflow: hidden;
+	border-radius: 12px;
+}
+
+.slide {
+	position: relative;
+	height: 400px;
+}
+
+.bannerImage {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 12px;
+}
+
+.bannerArrowPrev,
+.bannerArrowNext {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.8);
+	color: #333;
+	border: none;
+	cursor: pointer;
+	font-size: 20px;
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.3s ease;
+}
+
+.bannerArrowPrev:hover,
+.bannerArrowNext:hover {
+	background: rgba(255, 255, 255, 1);
+	transform: translateY(-50%) scale(1.1);
+}
+
+.bannerArrowPrev {
+	left: 20px;
+}
+
+.bannerArrowNext {
+	right: 20px;
+}
+
+.bannerDots {
+	position: absolute;
+	bottom: 20px;
+	left: 50%;
+	transform: translateX(-50%);
+	display: flex;
+	gap: 10px;
+	z-index: 10;
+}
+
+.dot {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	background: rgba(255, 255, 255, 0.5);
+	border: none;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.dot.active {
+	background: rgba(255, 255, 255, 1);
+	transform: scale(1.2);
+}
+
+.dot:hover {
+	background: rgba(255, 255, 255, 0.8);
+}
+
+/* Анимации */
+@keyframes fade {
+	from {
+		opacity: 0.4;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes slideIn {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+@keyframes pulse {
+	0% {
+		opacity: 0.6;
+	}
+
+	50% {
+		opacity: 0.8;
+	}
+
+	100% {
+		opacity: 0.6;
+	}
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+	.carouselItem {
+		flex: 0 0 calc(33.333% - 15px);
+	}
+
+	.bannerContainer {
+		max-width: 1000px;
+	}
+
+	.slide {
+		height: 350px;
+	}
+}
+
+@media (max-width: 992px) {
+	.carouselItem {
+		flex: 0 0 calc(50% - 15px);
+	}
+
+	.slide {
+		height: 300px;
+	}
+
+	.bannerArrowPrev,
+	.bannerArrowNext {
+		width: 40px;
+		height: 40px;
+		font-size: 16px;
+	}
+}
+
+@media (max-width: 768px) {
+	.carouselItem {
+		flex: 0 0 calc(50% - 15px);
+	}
+
+	.productsCarousel {
+		padding: 0 20px;
+	}
+
+	.slide {
+		height: 250px;
+	}
+
+	.bannerArrowPrev,
+	.bannerArrowNext {
+		width: 35px;
+		height: 35px;
+	}
+
+	.bannerArrowPrev {
+		left: 10px;
+	}
+
+	.bannerArrowNext {
+		right: 10px;
+	}
+
+	.bannerDots {
+		bottom: 15px;
+	}
+
+	.dot {
+		width: 10px;
+		height: 10px;
+	}
+}
+
+@media (max-width: 576px) {
+	.carouselItem {
+		flex: 0 0 100%;
+	}
+
+	.slide {
+		height: 200px;
+	}
+
+	.bannerArrowPrev,
+	.bannerArrowNext {
+		width: 30px;
+		height: 30px;
+		font-size: 14px;
+	}
+
+	.bannerDots {
+		bottom: 10px;
+	}
+
+	.dot {
+		width: 8px;
+		height: 8px;
+	}
+}
+
+/* Дополнительные стили для состояний */
+.carouselTrack:not(.animating) {
+	transition: none;
+}
+
+.carouselItem.loading {
+	animation: pulse 1.5s infinite;
+}
+
+/* Улучшение доступности */
+.carouselArrow:focus,
+.dot:focus {
+	outline: 2px solid #4d90fe;
+	outline-offset: 2px;
+}
+
+/* Поддержка prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+
+	.carouselTrack,
+	.carouselItem,
+	.bannerArrowPrev,
+	.bannerArrowNext,
+	.dot {
+		transition: none;
+		animation: none;
+	}
+
+	.carouselTrack {
+		transition: none;
+	}
+}

@@ -135,7 +135,7 @@ const Product = sequelize.define('product', {
 	id: {
 		type: DataTypes.UUID,
 		defaultValue: DataTypes.UUIDV4,
-		primaryKey: true
+		primaryKey: true	
 	},
 	name: {
 		type: DataTypes.STRING,
@@ -157,6 +157,14 @@ const Product = sequelize.define('product', {
 	},
 	images: {
 		type: DataTypes.ARRAY(DataTypes.STRING)
+	},
+	isTopSales: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false
+	}, 
+	isRecommended: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false
 	},
 	brandId: {
 		type: DataTypes.INTEGER,

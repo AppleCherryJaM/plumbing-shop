@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react";
 import styles from "./RegistrationPage.module.css";
 
 import UserController from "../../controllers/user-controller";
+import logo from '/images/vas-blue-logo.png'; 
 import { Context } from "../../main";
 import { observer } from "mobx-react-lite";
 
@@ -29,60 +30,68 @@ const RegistrationPage = observer(() => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <div className={styles.logo}>Logo</div>
-        <h2>{isRegister ? "Register" : "Login"}</h2>
+          <img className={styles.logo} src={logo} alt="Logo"/>
+        <div className={styles.title}>{isRegister ? "Register" : "Login"}</div>
       </header>
 
       <form className={styles.form} onSubmit={handleSubmit}>
-        <label className={styles.label}>
-          Email:
-          <input
-            className={styles.input}
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </label>
+        <div className={styles.inputForms}>
+          <div className={styles.coolinput}>
+            <label for="input" className={styles.text}>Email:</label>
+            <input
+              className={styles.input}
+              type="email"
+              value={email}
+              placeholder="Enter email..."
+             onChange={(e) => setEmail(e.target.value)}
+             required
+            />
+          </div>
 
-				{isRegister && <>
-					<label className={styles.label}>
-          Name:
-          <input
-            className={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </label>
-				<label className={styles.label}>
-          Phone:
-          <input
-            className={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </label>
-				</>
-				}
+          {isRegister && <>
+            <div className={styles.coolinput}>
+              <label for="input" className={styles.text}>Name:</label>
+              <input
+                className={styles.input}
+                type="text"
+                value={name}
+                placeholder="Enter name..."
+               onChange={(e) => setName(e.target.value)}
+               required
+              />
+            </div>
+          <div className={styles.coolinput}>
+              <label for="input" className={styles.text}>Phone:</label>
+              <input
+                className={styles.input}
+                type="tel"
+                value={phone}
+                placeholder="Enter phone..."
+               onChange={(e) => setPhone(e.target.value)}
+               required
+              />
+            </div>
+          </>
+          }
 
-        <label className={styles.label}>
-          Password:
-          <input
-            className={styles.input}
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
+          <div className={styles.coolinput}>
+            <label for="input" className={styles.text}>Password:</label>
+            <input
+              className={styles.input}
+              type="password"
+              value={password}
+              placeholder="Enter password..."
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+        </div>
 
-        <button type="submit" className={styles.button}>
-          {isRegister ? "Register" : "Login"}
-        </button>
+        <div className={styles.center}>
+          <button type="submit" className={styles.button}>
+            {isRegister ? "Register" : "Login"}
+          </button>
+        </div>
       </form>
 
       <div className={styles.switchText}>

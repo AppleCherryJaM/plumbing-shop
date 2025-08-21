@@ -1,44 +1,157 @@
-.header {
+:root {
+	--color-primary: #add8e6;
+	--color-primary-dark: #3399cc;
+	--color-secondary: #d4edf4;
+	--color-white: #ffffff;
+	--color-text: #333333;
+	--color-text-light: #666666;
+	--radius-md: 8px;
+	--box-shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.siteHeader {
+	background-color: var(--color-white);
+	/* box-shadow: var(--box-shadow-light); */
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	transition: all 0.3s ease-in-out;
+	box-shadow: 5px 5px 5px 5px #add8e6;
+	height: 85px;
+}
+
+.container {
 	display: flex;
-	justify-content: space-between;
 	align-items: center;
-	background-color: #add8e6;
-	padding: 16px 32px;
-	font-family: 'Segoe UI', sans-serif;
+	justify-content: space-between;
+	max-width: 2000px;
+	padding: 10px 20px;
+	margin: 0 auto;
+	flex-wrap: wrap;
+	gap: 10px;
 }
 
-.logo {
-	font-weight: bold;
-	font-size: 20px;
-}
-
-.nav {
+.leftBlock, .rightBlock {
 	display: flex;
-	gap: 24px;
+	align-items: center;
+	justify-content: space-between;
+	gap: 10px;
 }
 
-.nav a {
-	text-decoration: none;
-	color: #000;
-	font-weight: bold;
-	transition: 0.2s;
+.logo img {
+	height: 60px;
+	width: 120px;
 }
 
-.nav a:hover {
-	text-decoration: underline;
+/* Поиск */
+.searchForm {
+	flex: 1;
+	display: flex;
+	background-color: var(--color-secondary);
+	border-radius: var(--radius-md);
+	padding: 5px 10px;
+	max-width: 400px;
 }
 
-.login-button {
-	padding: 8px 16px;
+.openSearch {
 	border: none;
-	background-color: #e6f4fa;
-	color: #000;
-	border-radius: 6px;
-	cursor: pointer;
-	font-weight: 600;
-	transition: 0.3s;
+	height: 40px;
+	width: 40px;
+	border-radius: 30px;
+	box-shadow: 3px 1px 1px ;
 }
 
-.login-button:hover {
-	background-color: #d0edf9;
+.searchForm input {
+	border: none;
+	outline: none;
+	flex: 1;
+	background: transparent;
+	font-size: 14px;
+}
+
+.searchForm button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--color-text-light);
+	display: flex;
+	align-items: center;
+}
+
+/* Навигация */
+.mainNav {
+	display: flex;
+	gap: 15px;
+}
+
+.mainNav a {
+	color: var(--color-text);
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.mainNav a:hover {
+	color: var(--color-primary-dark);
+}
+
+/* Иконки */
+.headerIcons a svg {
+	fill: none;
+	stroke: var(--color-text);
+	width: 24px;
+	height: 24px;
+}
+
+.headerIcons a:hover svg {
+	stroke: var(--color-primary-dark);
+}
+
+/* Кнопка меню */
+.mobileMenuToggle {
+	display: none;
+	background: none;
+	border: none;
+	font-size: 24px;
+	cursor: pointer;
+	color: var(--color-text);
+}
+
+/* Мобильные стили */
+@media (max-width: 768px) {
+
+	.mainNav,
+	.headerIcons {
+		display: none;
+	}
+
+	.mobileMenuToggle {
+		display: block;
+	}
+
+	.mainNav.open,
+	.headerIcons.open {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		position: absolute;
+		top: 60px;
+		right: 20px;
+		background: var(--color-white);
+		box-shadow: var(--box-shadow-light);
+		padding: 10px;
+		border-radius: var(--radius-md);
+		animation: dropdown 0.3s ease-out forwards;
+	}
+
+	@keyframes dropdown {
+		0% {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+
+		100% {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
 }
