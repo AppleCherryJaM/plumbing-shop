@@ -14,7 +14,7 @@ const content = {
 		},
 		{
 			id: 2,
-			image: 'https://i.pinimg.com/236x/d1/d4/63/d1d46381d3c104837c94190352b4186b.jpg',
+			image: 'https://wallpapers.com/images/featured/coolest-pictures-88c269e953ar0aw4.jpg',
 			link: `/category/2`
 		},
 		{
@@ -29,7 +29,7 @@ const MainPage = () => {
 	
 	// тут нужно вызывать топ-продаж и рекоммендуемые товары 
 	return (
-		<main className={styles.mainPage}>
+		<div className={styles.mainPage}>
 			<div className={styles.bannerBlock}>
 				<Carousel type={"banner"} content={content}/>
 			</div>
@@ -40,7 +40,7 @@ const MainPage = () => {
 					/>
 				</div>
 			</div>
-		</main>
+		</div>
 	)
 }
 

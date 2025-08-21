@@ -1,3 +1,11 @@
 .carousel {
 	padding: 10px 100px;
 }
+
+.bannerBlock {
+	/* padding: 20px 130px; */
+		margin: 20px 0;
+		width: 100%;
+		display: flex;
+		align-items: center;
+}

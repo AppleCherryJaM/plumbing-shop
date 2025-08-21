@@ -9,10 +9,11 @@ import BurgerButton from "./burgerButton/BurgerButton";
 import RegistrationToggle from "./registrationToggle/RegistrationToggle";
 import Carousel from "./carousel/Carousel";
 import Slide from "./slide/Slide";
+import filterBlock from "./filterBlock/filterBlock";
 
 export { 
 	Footer, Header, SideBar, 
 	Layout, ProductItem, ProductGrid, 
 	SearchToggle, BurgerButton, RegistrationToggle, 
-	Carousel, Slide
+	Carousel, Slide, filterBlock,
 };

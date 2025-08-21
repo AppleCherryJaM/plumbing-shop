@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ProductItem } from '../components';
-import Slide from '../slide/Slide';
+import { ProductItem, Slide } from '../components';
 import styles from './Carousel.module.css';
 
 const Carousel = ({ content, type = 'default' }) => {
