@@ -2,28 +2,28 @@ const sidebarSettings = [
 	{
 		name: "profile",
 		text: "Профіль",
-		link: "/profile"
+		link: "/profile",
 	},
 	{
 		name: "catalog",
 		text: "Каталог",
-		link: '/catalog'
+		link: "/catalog",
 	},
 	{
 		name: "bucket",
 		text: "Кошик",
-		link: '/bucket'
+		link: "/bucket",
 	},
 	{
 		name: "comparison",
 		text: "Порівняння",
-		link: "/comparison"
+		link: "/comparison",
 	},
 	{
 		name: "favourites",
 		text: "Обране",
-		link: "/fav"
-	}
+		link: "/fav",
+	},
 ];
 
 export default sidebarSettings;

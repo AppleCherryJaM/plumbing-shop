@@ -1,16 +1,16 @@
 .burgerWrapper {
-		display: flex;
-		align-items: center;
-		transition: all 0.4s ease;
-		width: 40px;
-		height: 40px;
-		background-color: var(--color-white);
-		border-radius: 50px;
-		overflow: hidden;
-		padding: 5px;
-		box-shadow: var(--box-shadow-light);
-		position: relative;
-		cursor: pointer;
+	display: flex;
+	align-items: center;
+	transition: all 0.4s ease;
+	width: 40px;
+	height: 40px;
+	background-color: var(--color-white);
+	border-radius: 50px;
+	overflow: hidden;
+	padding: 5px;
+	box-shadow: var(--box-shadow-light);
+	position: relative;
+	cursor: pointer;
 }
 
 .burgerWrapper:hover {

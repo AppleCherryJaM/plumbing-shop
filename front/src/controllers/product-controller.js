@@ -6,27 +6,25 @@ export default class ProductController {
 	}
 
 	static async getAllProducts() {
-		return productApi.get('/');
+		return productApi.get("/");
 	}
 
 	static async searchProduct(searchQuery) {
-		return productApi.get('/search', {
+		return productApi.get("/search", {
 			params: {
-				query: searchQuery
-			}
+				query: searchQuery,
+			},
 		});
 	}
 
 	static async getProductList(params) {
 		const { brandId, cIds, currency } = params;
-		return productApi.get('/', {
+		return productApi.get("/", {
 			params: {
 				brandId: brandId,
 				cIds: cIds,
-				currency: currency
-			}
+				currency: currency,
+			},
 		});
 	}
-	
-	
 }

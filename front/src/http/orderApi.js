@@ -1,10 +1,10 @@
-import axios from 'axios';
+import axios from "axios";
 
 const URL = `${import.meta.env.VITE_API_URL}/order`;
 
 const orderApi = axios.create({
 	withCredentials: true,
-	baseURL: URL
+	baseURL: URL,
 });
 
 export default orderApi;

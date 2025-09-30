@@ -2,10 +2,10 @@
 	max-width: 450px;
 	margin: auto;
 	padding: 20px;
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-	border: 3px solid #ADD8E6;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	border: 3px solid #add8e6;
 	border-radius: 8px;
-	box-shadow: 0 0 10px #ADD8E6;
+	box-shadow: 0 0 10px #add8e6;
 	background-color: white;
 }
 
@@ -23,7 +23,7 @@
 .logo {
 	height: 60px;
 	width: 120px;
-	color: #3399FF;
+	color: #3399ff;
 	/* margin-bottom: 3px; */
 }
 
@@ -76,7 +76,7 @@
 .coolinput input.input {
 	padding: 11px 10px;
 	font-size: 0.75rem;
-	border: 2px #ADD8E6 solid;
+	border: 2px #add8e6 solid;
 	border-radius: 5px;
 	background: #ffffff;
 }
@@ -102,18 +102,18 @@
 	max-width: 240px;
 }
 
-.switchText{
+.switchText {
 	margin-top: 15px;
 	text-align: center;
 	font-size: 14px;
 	color: #333333;
-	border: 3px
+	border: 3px;
 }
 
 .switchButton {
 	background: none;
 	border: none;
-	color: #3399FF;
+	color: #3399ff;
 	cursor: pointer;
 	font-weight: bold;
 	text-decoration: underline;
