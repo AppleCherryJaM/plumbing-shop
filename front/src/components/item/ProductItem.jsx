@@ -89,20 +89,30 @@ const ProductItem = ({ product, onClick }) => {
               gap: 1
             }}
           >
-            <Select
+            {/* <Select
               size="small"
               defaultValue={name}
               sx={{ minWidth: 200 }}
               disabled
             >
               <MenuItem value={name}>{name}</MenuItem>
-            </Select>
+            </Select> */}
 
             <Button
               variant="contained"
-              color="primary"
               fullWidth
               disabled={stock?.available <= 0}
+              sx={{
+                backgroundColor: "#add8e6",
+                color: "#000000",
+                "&:hover": {
+                  backgroundColor: "#8bc3d8", // Темнее при hover
+                },
+                "&:disabled": {
+                  backgroundColor: "#e0e0e0",
+                  color: "#9e9e9e"
+                }
+              }}
             >
               {stock?.available > 0 ? "В корзину" : "Ожидается"}
             </Button>

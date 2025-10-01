@@ -11,8 +11,8 @@ const mockProducts = {
 				discount: 99.99,
 			},
 			images: [
-				"https://example.com/pics/aurora_mixer_1.jpg",
-				"https://example.com/pics/aurora_mixer_2.jpg",
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
 			],
 			brand: {
 				id: 1,
@@ -46,7 +46,10 @@ const mockProducts = {
 				currency: "USD",
 				discount: null,
 			},
-			images: ["https://example.com/pics/vitra_toilet_1.jpg"],
+			images: [
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
+			],
 			brand: {
 				id: 2,
 				name: "Vitra",
@@ -77,8 +80,8 @@ const mockProducts = {
 				discount: 379.99,
 			},
 			images: [
-				"https://example.com/pics/blanco_sink_1.jpg",
-				"https://example.com/pics/blanco_sink_2.jpg",
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
 			],
 			brand: {
 				id: 3,
@@ -112,7 +115,10 @@ const mockProducts = {
 				currency: "USD",
 				discount: null,
 			},
-			images: ["https://example.com/pics/grohe_shower_1.jpg"],
+			images: [
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
+			],
 			brand: {
 				id: 4,
 				name: "Grohe",
@@ -142,7 +148,10 @@ const mockProducts = {
 				currency: "USD",
 				discount: 209.99,
 			},
-			images: ["https://example.com/pics/hansgrohe_mixer_1.jpg"],
+			images: [
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
+			],
 			brand: {
 				id: 5,
 				name: "Hansgrohe",
@@ -176,8 +185,8 @@ const mockProducts = {
 				discount: null,
 			},
 			images: [
-				"https://example.com/pics/bwt_filter_1.jpg",
-				"https://example.com/pics/bwt_filter_2.jpg",
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
 			],
 			brand: {
 				id: 6,
@@ -211,7 +220,10 @@ const mockProducts = {
 				currency: "USD",
 				discount: 249.99,
 			},
-			images: ["https://example.com/pics/catalano_bidet_1.jpg"],
+			images: [
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
+			],
 			brand: {
 				id: 7,
 				name: "Catalano",
@@ -242,8 +254,8 @@ const mockProducts = {
 				discount: 829.99,
 			},
 			images: [
-				"https://example.com/pics/roca_bathtub_1.jpg",
-				"https://example.com/pics/roca_bathtub_2.jpg",
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
 			],
 			brand: {
 				id: 8,
@@ -279,8 +291,8 @@ const mockProducts = {
 				discount: null,
 			},
 			images: [
-				"https://example.com/pics/geberit_installation_1.jpg",
-				"https://example.com/pics/geberit_installation_2.jpg",
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
 			],
 			brand: {
 				id: 9,
@@ -315,7 +327,10 @@ const mockProducts = {
 				currency: "USD",
 				discount: 449.99,
 			},
-			images: ["https://example.com/pics/dyson_dryer_1.jpg"],
+			images: [
+				"https://sanit.by/files/resized/original-2640-11384047419-S-50-7201-1.jpg",
+				"https://sanit.by/files/resized/original-2640-2104059922-S-50-7201-3.jpg"
+			],
 			brand: {
 				id: 10,
 				name: "Dyson",
