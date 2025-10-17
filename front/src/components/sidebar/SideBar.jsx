@@ -1,12 +1,11 @@
-import React from 'react'
-import styles from './SideBar.module.css';
-
 const Sidebar = ({ children }) => {
 	return (
-		<aside 
+		<aside
 		// className={styles.sidebar}
-		>{children}</aside>
-	)
-}
+		>
+			{children}
+		</aside>
+	);
+};
 
 export default Sidebar;

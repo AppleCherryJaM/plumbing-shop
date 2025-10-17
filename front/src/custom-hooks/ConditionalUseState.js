@@ -5,7 +5,7 @@ const useConditionalState = (condition, initialState) => {
 
 	if (!condition) {
 		// Возвращаем заглушки если состояние не нужно
-		return [null, () => { }];
+		return [null, () => {}];
 	}
 
 	return [state, setState];

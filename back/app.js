@@ -17,7 +17,11 @@ const discountController = require('./controllers/discount-controller');
 const dayFormula = require("./util/day-formula");
 
 const PORT = process.env.PORT;
-const CLIENT_URL = process.env.CLIENT_URL;
+
+const allowedOrigins = [
+    process.env.CLIENT_URL,
+    process.env.ADMIN_CLIENT_URL
+]
 
 const app = express();
 
@@ -28,7 +32,16 @@ app.use(express.static(__dirname + 'static'));
 app.use(fileUpload({}));
 app.use("*", cors({
     credentials: true,
-    origin: CLIENT_URL
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
 }));
 app.use(cookieParser());
 

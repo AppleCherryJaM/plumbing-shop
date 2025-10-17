@@ -31,7 +31,8 @@
 	gap: 10px;
 }
 
-.leftBlock, .rightBlock {
+.leftBlock,
+.rightBlock {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -58,7 +59,7 @@
 	height: 40px;
 	width: 40px;
 	border-radius: 30px;
-	box-shadow: 3px 1px 1px ;
+	box-shadow: 3px 1px 1px;
 }
 
 .searchForm input {
@@ -118,7 +119,6 @@
 
 /* Мобильные стили */
 @media (max-width: 768px) {
-
 	.mainNav,
 	.headerIcons {
 		display: none;

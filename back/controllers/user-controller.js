@@ -25,7 +25,7 @@ class UserController {
 				return next(ApiError.BadAPIRequest('Incorrect email or password'));
 			}
 
-			const userData = await userService.registration(email, password, phone, name);
+			const userData = await userService.registration(email, password, phone, name, role);
 			res.cookie('refreshToken', userData.refreshToken, {
 				maxAge: 30*24*60*60*1000, 
 				httpOnly: true,
