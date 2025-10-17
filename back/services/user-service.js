@@ -9,7 +9,7 @@ const bcrypt = require("bcrypt");
 const { v4: uuidv4 } = require("uuid");
 
 class UserService {
-	async registration(email, password, phone, name) {
+	async registration(email, password, phone, name, role) {
 		const candidate = await User.findOne({
 			where: { email, phone }
 		});
@@ -21,7 +21,7 @@ class UserService {
 		const hashPassword = await bcrypt.hash(password, 3);
 		const activationLink = uuidv4();
 		const user = await User.create({
-			email, password: hashPassword, phone, name, activationLink
+			email, password: hashPassword, phone, name, activationLink, role
 		});
 
 		await mailService.sendActivationLink(email,

@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import { Layout } from "../components/components";
+import { Layout } from "@components/components";
 import {
 	CatalogPage,
 	ComparisonPage,

@@ -358,19 +358,32 @@ const mockProducts = {
 			brands: [
 				{ id: 1, name: "Aurora", count: 2 },
 				{ id: 2, name: "Vitra", count: 1 },
-				{ id: 10, name: "Dyson", count: 1 },
+				{ id: 3, name: "Blanco", count: 1 },
+				{ id: 4, name: "Grohe", count: 1 },
+				{ id: 5, name: "Hansgrohe", count: 1 },
+				{ id: 6, name: "BWT", count: 1 },
+				{ id: 7, name: "Catalano", count: 1 },
+				{ id: 8, name: "Roca", count: 1 },
+				{ id: 9, name: "Geberit", count: 1 },
+				{ id: 10, name: "Dyson", count: 1 }
 			],
 			categories: [
-				{ id: 1, name: "Смесители", count: 1 },
-				{ id: 2, name: "Унитазы", count: 1 },
-				{ id: 9, name: "Аксессуары", count: 1 },
+				{ id: 1, name: "Смесители", count: 2 },
+				{ id: 2, name: "Унитазы", count: 2 },
+				{ id: 3, name: "Раковины", count: 1 },
+				{ id: 4, name: "Душевые системы", count: 1 },
+				{ id: 6, name: "Фильтры для воды", count: 1 },
+				{ id: 9, name: "Биде", count: 1 },
+				{ id: 10, name: "Ванны", count: 1 },
+				{ id: 11, name: "Инсталляции", count: 1 },
+				{ id: 12, name: "Аксессуары", count: 1 }
 			],
 			priceRange: {
-				min: 89.99,
-				max: 499.99,
-			},
+				min: 124.99, // Минимальная цена из данных
+				max: 899.99  // Максимальная цена из данных
+			}
 		},
-	},
+	}
 };
 
 // Пример использования в React:

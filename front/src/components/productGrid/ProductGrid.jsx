@@ -10,9 +10,7 @@ const ProductGrid = ({ products }) => {
 			{products.map((item) => (
 				<ProductItem
 					key={item.id}
-					title={item.title}
-					price={item.price}
-					image={item.image}
+					product={item}
 					onClick={() => navigate(`/product/${item.id}`)}
 				/>
 			))}

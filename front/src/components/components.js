@@ -1,6 +1,6 @@
 import BurgerButton from "./burgerButton/BurgerButton";
 import Carousel from "./carousel/Carousel";
-import filterBlock from "./filterBlock/filterBlock";
+import FilterBlock from "./filterBlock/FilterBlock";
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import ProductItem from "./item/ProductItem";
@@ -23,5 +23,5 @@ export {
 	RegistrationToggle,
 	Carousel,
 	Slide,
-	filterBlock,
+	FilterBlock,
 };
