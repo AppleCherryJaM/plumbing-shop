@@ -8,10 +8,12 @@ router.post('/registration',
 	body("email").isEmail(),
 	body("password").isLength({min: 4, max: 16}),
 	userController.registration);
+
 router.post('/login',
 	body("email").isEmail(),
 	body("password").isLength({ min: 4, max: 16 }),
 	userController.login);
+	
 router.post('/logout', authMiddleware, userController.logout);
 
 router.get("/activate/:link", userController.activate);

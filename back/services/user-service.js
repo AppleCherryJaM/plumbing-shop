@@ -21,18 +21,23 @@ class UserService {
 		const hashPassword = await bcrypt.hash(password, 3);
 		const activationLink = uuidv4();
 		const user = await User.create({
-			email, password: hashPassword, phone, name, activationLink, role
+			email,
+			password: hashPassword,
+			phone,
+			name,
+			activationLink,
+			role,
+			isActivated: true // ✅ АКТИВИРУЕМ СРАЗУ ДЛЯ ТЕСТОВ
 		});
 
-		await mailService.sendActivationLink(email,
-			 `${process.env.API_URL}/api/user/activate/${activationLink}`
-		);
+		// Пропускаем отправку email для тестов
+		// await mailService.sendActivationLink(email, `${process.env.API_URL}/api/user/activate/${activationLink}`);
 
 		const userDto = new UserDto(user);
-		const tokens = tokenService.generateTokens({...userDto});
+		const tokens = tokenService.generateTokens({ ...userDto });
 		await tokenService.saveToken(userDto.id, tokens.refreshToken);
-		
-		return {...tokens, user: userDto};
+
+		return { ...tokens, user: userDto };
 	}
 
 	async activate(link) {

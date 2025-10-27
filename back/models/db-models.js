@@ -135,46 +135,75 @@ const Product = sequelize.define('product', {
 	id: {
 		type: DataTypes.UUID,
 		defaultValue: DataTypes.UUIDV4,
-		primaryKey: true	
+		primaryKey: true
 	},
 	name: {
 		type: DataTypes.STRING,
-		unique: true,
 		allowNull: false
 	},
 	retailPrice: {
-		type: DataTypes.FLOAT,
+		type: DataTypes.DECIMAL(10, 2),  // Лучше чем FLOAT для денег
 		allowNull: false
 	},
 	wholesalePrice: {
-		type: DataTypes.FLOAT,
+		type: DataTypes.DECIMAL(10, 2),  // DECIMAL точнее для финансов
 		allowNull: false
 	},
 	priceCurrency: {
-		type: DataTypes.STRING,
+		type: DataTypes.STRING(3),  // Ограничить до 3 символов (USD, EUR, etc)
 		allowNull: false,
 		defaultValue: "USD"
 	},
 	images: {
-		type: DataTypes.ARRAY(DataTypes.STRING)
+		type: DataTypes.ARRAY(DataTypes.STRING),
+		defaultValue: []  // Явное значение по умолчанию
 	},
 	isTopSales: {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false
-	}, 
+	},
 	isRecommended: {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false
+	},
+	sku: {
+		type: DataTypes.STRING,
+		unique: true,
+		allowNull: false  // SKU обязателен!
 	},
 	brandId: {
 		type: DataTypes.INTEGER,
 		allowNull: false
 	},
+	externalId: {
+		type: DataTypes.STRING,
+		unique: true,
+		allowNull: true  // Может быть null для ручного создания
+	},
+	isAvailable: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: true
+	},
 	totalQuantity: {
 		type: DataTypes.INTEGER,
-		defaultValue: 0
+		defaultValue: 0,
+		validate: {
+			min: 0  // Не может быть отрицательным
+		}
+	},
+	description: {
+		type: DataTypes.TEXT,
+		allowNull: true
 	}
-}, { timestamps: false });
+}, {
+	timestamps: false,
+	indexes: [
+		{ fields: ['sku'] },
+		{ fields: ['name'] },
+		{ fields: ['brandId'] },
+		{ fields: ['isAvailable'] }
+	]
+});
 
 const Order = sequelize.define('order', {
 	id: {

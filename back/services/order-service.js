@@ -1,4 +1,5 @@
 const { Sequelize } = require("../database/db");
+const { Order } = require("../models/db-models");
 
 class OrderService {
 	async getOrderList(params) {
@@ -32,6 +33,16 @@ class OrderService {
 			}
 		}
 		const result = await Sequelize.query(query);
+		return result;
+	}
+
+	async getOrdersQuantity(createdAt) {
+		const result = await Order.findAndCountAll({
+			where: {
+				created_at: createdAt,
+				isOpened: true
+			}
+		});
 		return result;
 	}
 }

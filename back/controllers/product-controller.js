@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const path = require("path");
+const fs = require("fs");
 const { Op, QueryTypes, where } = require("sequelize");
 
 const ApiError = require("../exceptions/api-error");
@@ -7,8 +8,43 @@ const { Product, Category, ProductInfo, Exchange, Discount, CategoryBrand} = req
 const getDay = require("../util/day-formula");
 const priceFormula = require("../util/price-formula");
 const productService = require("../services/product-service");
+const ParserService = require("../services/file-parser-service");
 
 class ProductController {
+	
+	async importProductsFromFile(req, res, next) {
+
+		if (!req.files || !req.files.importFile) {
+			return next(ApiError.BadAPIRequest('Import file is required'));
+		}
+
+		const importFile = req.files.importFile;
+
+		const fileType = ParserService.getFileType(importFile.name, importFile.mimetype);
+
+		const tempDir = path.join(__dirname, '..', 'temp');
+		if (!fs.existsSync(tempDir)) {
+			fs.mkdirSync(tempDir, { recursive: true });
+		}
+
+		const tempFilePath = path.join(tempDir, `${uuid.v4()}.json`);
+
+		try {
+			await importFile.mv(tempFilePath);
+
+			const parsedFile = await ParserService.parseFile(tempFilePath, fileType);
+			fs.unlinkSync(tempFilePath);
+
+			return res.status(200).json({ result: parsedFile });
+
+		} catch (error) {
+			if (fs.existsSync(tempFilePath)) {
+				fs.unlinkSync(tempFilePath);
+			}
+			console.error("Controller error:", error);
+			return next(ApiError.BadAPIRequest(error.message));
+		}
+	}
 
 	async createProduct(req, res, next) {
 		const { 
